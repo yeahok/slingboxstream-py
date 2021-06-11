@@ -30,7 +30,7 @@ def aiohttp_server():
     
     async def handle_remote_request(request):
         button = request.match_info.get('code', "")
-        slingconn.send_remote_button(int(btn))
+        slingconn.send_remote_button(int(button))
         return web.Response(text="Sent remote button: {0}".format(button))
 
     app = web.Application()
