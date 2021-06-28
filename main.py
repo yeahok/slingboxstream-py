@@ -1,17 +1,11 @@
 import threading
 import time
+import configparser
 
 import asyncio
 from aiohttp import web
 
 import slingapi
-
-
-SLING_IP = "192.168.0.123"
-SLING_PORT = 5201
-USERNAME = "admin"  # admin or guest
-PASSWORD = "password"
-
 
 # adapted from https://stackoverflow.com/a/51610341
 def aiohttp_server():
@@ -48,6 +42,14 @@ def run_web_server(runner):
     site = web.TCPSite(runner, "localhost", 8080)
     loop.run_until_complete(site.start())
     loop.run_forever()
+
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+SLING_IP = config["slingbox"]["ip"]
+SLING_PORT = int(config["slingbox"]["port"])
+USERNAME = config["slingbox"]["username"]
+PASSWORD = config["slingbox"]["password"]
 
 t=threading.Thread(target=run_web_server, args=(aiohttp_server(),))
 t.start()
